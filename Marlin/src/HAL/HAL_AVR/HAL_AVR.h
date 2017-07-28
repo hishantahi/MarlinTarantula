@@ -41,6 +41,7 @@
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
+#include <avr/io.h>
 
 #include "fastio_AVR.h"
 #include "watchdog_AVR.h"
@@ -101,7 +102,11 @@ extern "C" {
 #define TEMP_TIMER_NUM 0
 #define TEMP_TIMER_FREQUENCY (F_CPU / 64.0 / 256.0)
 
+<<<<<<< HEAD
 #define HAL_TIMER_RATE 	((F_CPU) / 8.0)
+=======
+#define HAL_TIMER_RATE ((F_CPU) / 8.0)
+>>>>>>> MarlinFirmware/2.0.x
 #define HAL_STEPPER_TIMER_RATE HAL_TIMER_RATE
 #define STEPPER_TIMER_PRESCALE INT0_PRESCALER
 
@@ -122,8 +127,13 @@ extern "C" {
 //void HAL_timer_isr_prologue (uint8_t timer_num);
 #define HAL_timer_isr_prologue(timer_num)
 
+<<<<<<< HEAD
 #define HAL_STEP_TIMER_ISR 	ISR(TIMER1_COMPA_vect)
 #define HAL_TEMP_TIMER_ISR  ISR(TIMER0_COMPB_vect)
+=======
+#define HAL_STEP_TIMER_ISR ISR(TIMER1_COMPA_vect)
+#define HAL_TEMP_TIMER_ISR ISR(TIMER0_COMPB_vect)
+>>>>>>> MarlinFirmware/2.0.x
 
 #define HAL_ENABLE_ISRs() do { cli(); if (thermalManager.in_temp_isr)DISABLE_TEMPERATURE_INTERRUPT(); else ENABLE_TEMPERATURE_INTERRUPT(); ENABLE_STEPPER_DRIVER_INTERRUPT(); } while(0)
 

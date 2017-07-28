@@ -74,26 +74,26 @@ static bool eeprom_initialised = false;
 static uint8_t eeprom_device_address = 0x50;
 
 static void eeprom_init(void) {
-	if (!eeprom_initialised) {
-		Wire.begin();
-		eeprom_initialised = true;
-	}
+  if (!eeprom_initialised) {
+    Wire.begin();
+    eeprom_initialised = true;
+  }
 }
 
 void eeprom_write_byte(unsigned char *pos, unsigned char value) {
-	unsigned eeprom_address = (unsigned) pos;
+  unsigned eeprom_address = (unsigned) pos;
 
-	eeprom_init();
+  eeprom_init();
 
-	Wire.beginTransmission(eeprom_device_address);
-	Wire.write((int)(eeprom_address >> 8));   // MSB
-	Wire.write((int)(eeprom_address & 0xFF)); // LSB
+  Wire.beginTransmission(eeprom_device_address);
+  Wire.write((int)(eeprom_address >> 8));   // MSB
+  Wire.write((int)(eeprom_address & 0xFF)); // LSB
   Wire.write(value);
-	Wire.endTransmission();
+  Wire.endTransmission();
 
-	// wait for write cycle to complete
-	// this could be done more efficiently with "acknowledge polling"
-	delay(5);
+  // wait for write cycle to complete
+  // this could be done more efficiently with "acknowledge polling"
+  delay(5);
 }
 
 // WARNING: address is a page address, 6-bit end will wrap around
@@ -129,19 +129,19 @@ void eeprom_update_block(const void* pos, void* eeprom_address, size_t n) {
 
 
 unsigned char eeprom_read_byte(unsigned char *pos) {
-	byte data = 0xFF;
-	unsigned eeprom_address = (unsigned) pos;
+  byte data = 0xFF;
+  unsigned eeprom_address = (unsigned) pos;
 
-	eeprom_init ();
+  eeprom_init ();
 
-	Wire.beginTransmission(eeprom_device_address);
-	Wire.write((int)(eeprom_address >> 8));   // MSB
-	Wire.write((int)(eeprom_address & 0xFF)); // LSB
-	Wire.endTransmission();
-	Wire.requestFrom(eeprom_device_address, (byte)1);
-	if (Wire.available())
-		data = Wire.read();
-	return data;
+  Wire.beginTransmission(eeprom_device_address);
+  Wire.write((int)(eeprom_address >> 8));   // MSB
+  Wire.write((int)(eeprom_address & 0xFF)); // LSB
+  Wire.endTransmission();
+  Wire.requestFrom(eeprom_device_address, (byte)1);
+  if (Wire.available())
+    data = Wire.read();
+  return data;
 }
 
 // maybe let's not read more than 30 or 32 bytes at a time!

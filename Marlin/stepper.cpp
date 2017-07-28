@@ -55,7 +55,7 @@
 #include "ultralcd.h"
 #include "language.h"
 #include "cardreader.h"
-#if defined(ARDUINO_ARCH_AVR)
+#ifdef ARDUINO_ARCH_AVR
   #include "speed_lookuptable.h"
 #endif
 
@@ -1129,7 +1129,7 @@ void Stepper::init() {
     E_AXIS_INIT(4);
   #endif
 
-#if defined(ARDUINO_ARCH_AVR)
+#ifdef ARDUINO_ARCH_AVR
   // waveform generation = 0100 = CTC
   SET_WGM(1, CTC_OCRnA);
 

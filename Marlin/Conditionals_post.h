@@ -963,7 +963,7 @@
     #define FMOD(x, y) fmodf(x, y)
   #endif
 
-  #if defined(TEENSYDUINO)
+  #ifdef TEENSYDUINO
     #undef max
     #define max(a,b) ((a)>(b)?(a):(b))
     #undef min

@@ -27,7 +27,7 @@
  */
 
 
-#if defined(ARDUINO_ARCH_AVR)
+#ifdef ARDUINO_ARCH_AVR
 
 // --------------------------------------------------------------------------
 // Includes

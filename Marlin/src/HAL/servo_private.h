@@ -45,7 +45,7 @@
 #include <inttypes.h>
 
 // Architecture specific include
-#if defined(ARDUINO_ARCH_AVR)
+#ifdef ARDUINO_ARCH_AVR
   #include "HAL_AVR/ServoTimers.h"
 #elif defined(ARDUINO_ARCH_SAM)
   #include "HAL_DUE/ServoTimers.h"

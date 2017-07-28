@@ -94,8 +94,8 @@ uint8_t HAL_get_reset_source (void) {
 }
 
 void _delay_ms(int delay_ms) {
-	//todo: port for Due?
-	delay (delay_ms);
+  //todo: port for Due?
+  delay (delay_ms);
 }
 
 extern "C" {
@@ -113,12 +113,12 @@ int freeMemory() {
 // --------------------------------------------------------------------------
 
 void HAL_adc_start_conversion (uint8_t adc_pin) {
-	HAL_adc_result = analogRead(adc_pin);
+  HAL_adc_result = analogRead(adc_pin);
 }
 
 uint16_t HAL_adc_get_result(void) {
-	// nop
-	return HAL_adc_result;
+  // nop
+  return HAL_adc_result;
 }
 
 #endif // ARDUINO_ARCH_SAM

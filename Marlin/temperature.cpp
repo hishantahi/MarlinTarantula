@@ -32,7 +32,7 @@
 #include "language.h"
 
 #if ENABLED(HEATER_0_USES_MAX6675)
-  #include "spi.h"
+  #include "private_spi.h"
 #endif
 
 #if ENABLED(BABYSTEPPING)
@@ -1075,7 +1075,7 @@ void Temperature::init() {
   #endif
 
 // todo: HAL: fix abstraction
-  #if defined(ARDUINO_ARCH_AVR)
+  #ifdef ARDUINO_ARCH_AVR
     // Use timer0 for temperature measurement
     // Interleave temperature interrupt with millies interrupt
     OCR0B = 128;

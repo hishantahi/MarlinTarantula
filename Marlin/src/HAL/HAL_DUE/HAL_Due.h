@@ -58,14 +58,14 @@
   #define MYSERIAL Serial3
 #endif
 
-#define _BV(bit) 	(1 << (bit))
+#define _BV(bit) (1 << (bit))
 
 #ifndef analogInputToDigitalPin
   #define analogInputToDigitalPin(p) ((p < 12u) ? (p) + 54u : -1)
 #endif
 
-#define CRITICAL_SECTION_START	uint32_t primask=__get_PRIMASK(); __disable_irq();
-#define CRITICAL_SECTION_END    if (primask==0) __enable_irq();
+#define CRITICAL_SECTION_START  uint32_t primask = __get_PRIMASK(); __disable_irq();
+#define CRITICAL_SECTION_END    if (!primask) __enable_irq();
 
 // On AVR this is in math.h?
 #define square(x) ((x)*(x))

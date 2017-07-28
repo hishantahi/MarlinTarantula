@@ -5,7 +5,7 @@
 #include "../../../serial.h"
 #include "../../../utility.h"
 
-#if defined(ARDUINO_ARCH_AVR)
+#ifdef ARDUINO_ARCH_AVR
 #if ENABLED(EEPROM_SETTINGS)
 
 namespace HAL {
@@ -53,5 +53,5 @@ void read_data(int &pos, uint8_t* value, uint16_t size, uint16_t *crc) {
 }
 }
 
-#endif // #if ENABLED(EEPROM_SETTINGS)
-#endif // #if defined(ARDUINO_ARCH_AVR)
+#endif // EEPROM_SETTINGS
+#endif // ARDUINO_ARCH_AVR

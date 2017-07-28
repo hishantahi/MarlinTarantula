@@ -31,10 +31,8 @@
 #include "Conditionals_LCD.h"
 #include "Configuration_adv.h"
 #include "pins.h"
-#if defined(ARDUINO_ARCH_AVR)
-  #ifndef USBCON
-    #define HardwareSerial_h // trick to disable the standard HWserial
-  #endif
+#if defined(ARDUINO_ARCH_AVR) && !defined(USBCON)
+  #define HardwareSerial_h // trick to disable the standard HWserial
 #endif
 #include "Conditionals_post.h"
 #include "SanityCheck.h"

@@ -56,7 +56,7 @@
 #endif
 
 #ifndef _BV
-  #define _BV(PIN) (1UL << PIN)
+  #define _BV(bit) (1UL << (bit))
 #endif
 
 /**
@@ -268,7 +268,7 @@ typedef enum {
   #define PWM_CHK_MOTOR_CURRENT(p) false
 #endif
 
-#if defined(NUM_SERVOS)
+#ifdef NUM_SERVOS
   #if AVR_ATmega2560_FAMILY
     #define PWM_CHK_SERVO(p) ( p == 5 || NUM_SERVOS > 12 && p == 6 || NUM_SERVOS > 24 && p == 46)  //PWMS 3A, 4A & 5A
   #elif AVR_ATmega2561_FAMILY

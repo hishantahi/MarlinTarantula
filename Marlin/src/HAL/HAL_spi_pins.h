@@ -21,22 +21,22 @@
 #ifndef HAL_SPI_PINS_H_
 #define HAL_SPI_PINS_H_
 
-#ifdef ARDUINO_ARCH_SAM
+#include "MarlinConfig.h"
 
+#ifdef ARDUINO_ARCH_SAM
   #include "HAL_DUE/spi_pins.h"
 
 #elif defined(IS_32BIT_TEENSY)
-
   #include "HAL_TEENSY35_36/spi_pins.h"
 
 #elif defined(ARDUINO_ARCH_AVR)
-
   #include "HAL_AVR/spi_pins.h"
 
+#elif defined(TARGET_LPC1768)
+  #include "HAL_LPC1768/spi_pins.h"
+
 #else
-
-  #error Unsupported Platform!
-
+  #error "Unsupported Platform!"
 #endif
 
 #endif /* HAL_SPI_PINS_H_ */

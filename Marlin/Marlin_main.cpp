@@ -251,7 +251,9 @@
 #include "cardreader.h"
 #include "configuration_store.h"
 #include "language.h"
-#include "pins_arduino.h"
+#ifdef ARDUINO
+  #include "pins_arduino.h"
+#endif
 #include "math.h"
 #include "nozzle.h"
 #include "duration_t.h"
@@ -990,7 +992,7 @@ void servo_init() {
     #if ENABLED(NEOPIXEL_RGBW_LED)
 
       const uint32_t color = pixels.Color(r, g, b, w);
-      static int nextLed = 0;
+      static uint16_t nextLed = 0;
 
       if (!isSequence)
         set_neopixel_color(color);
@@ -4551,6 +4553,9 @@ void home_all_axes() { gcode_G28(true); }
 
       #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
+        #if ENABLED(PROBE_MANUALLY)
+          if (!no_action)
+        #endif
         if ( xGridSpacing != bilinear_grid_spacing[X_AXIS]
           || yGridSpacing != bilinear_grid_spacing[Y_AXIS]
           || left_probe_bed_position != LOGICAL_X_POSITION(bilinear_start[X_AXIS])
@@ -5575,12 +5580,14 @@ void home_all_axes() { gcode_G28(true); }
 
     bool G38_pass_fail = false;
 
-    // Get direction of move and retract
-    float retract_mm[XYZ];
-    LOOP_XYZ(i) {
-      float dist = destination[i] - current_position[i];
-      retract_mm[i] = FABS(dist) < G38_MINIMUM_MOVE ? 0 : home_bump_mm((AxisEnum)i) * (dist > 0 ? -1 : 1);
-    }
+    #if ENABLED(PROBE_DOUBLE_TOUCH)
+      // Get direction of move and retract
+      float retract_mm[XYZ];
+      LOOP_XYZ(i) {
+        float dist = destination[i] - current_position[i];
+        retract_mm[i] = FABS(dist) < G38_MINIMUM_MOVE ? 0 : home_bump_mm((AxisEnum)i) * (dist > 0 ? -1 : 1);
+      }
+    #endif
 
     stepper.synchronize();  // wait until the machine is idle
 
@@ -5644,7 +5651,7 @@ void home_all_axes() { gcode_G28(true); }
     // If any axis has enough movement, do the move
     LOOP_XYZ(i)
       if (FABS(destination[i] - current_position[i]) >= G38_MINIMUM_MOVE) {
-        if (!parser.seenval('F')) feedrate_mm_s = homing_feedrate(i);
+        if (!parser.seenval('F')) feedrate_mm_s = homing_feedrate((AxisEnum)i);
         // If G38.2 fails throw an error
         if (!G38_run_probe() && is_38_2) {
           SERIAL_ERROR_START();
@@ -6490,7 +6497,7 @@ inline void gcode_M42() {
 
 #if ENABLED(PINS_DEBUGGING)
 
-  #include "pinsDebug.h"
+  #include "src/HAL/HAL_pinsDebug.h"
 
   inline void toggle_pins() {
     const bool I_flag = parser.boolval('I');
@@ -6501,7 +6508,7 @@ inline void gcode_M42() {
 
     for (uint8_t pin = start; pin <= end; pin++) {
       //report_pin_state_extended(pin, I_flag, false);
-
+      if (!VALID_PIN(pin)) continue;
       if (!I_flag && pin_is_protected(pin)) {
         report_pin_state_extended(pin, I_flag, true, "Untouched ");
         SERIAL_EOL();
@@ -6727,14 +6734,15 @@ inline void gcode_M42() {
     // Watch until click, M108, or reset
     if (parser.boolval('W')) {
       SERIAL_PROTOCOLLNPGM("Watching pins");
-      byte pin_state[last_pin - first_pin + 1];
+      uint8_t pin_state[last_pin - first_pin + 1];
       for (int8_t pin = first_pin; pin <= last_pin; pin++) {
+        if (!VALID_PIN(pin)) continue;
         if (pin_is_protected(pin) && !ignore_protection) continue;
         pinMode(pin, INPUT_PULLUP);
         delay(1);
         /*
           if (IS_ANALOG(pin))
-            pin_state[pin - first_pin] = analogRead(pin - analogInputToDigitalPin(0)); // int16_t pin_state[...]
+            pin_state[pin - first_pin] = analogRead(DIGITAL_PIN_TO_ANALOG_PIN(pin)); // int16_t pin_state[...]
           else
         //*/
             pin_state[pin - first_pin] = digitalRead(pin);
@@ -6747,11 +6755,12 @@ inline void gcode_M42() {
 
       for (;;) {
         for (int8_t pin = first_pin; pin <= last_pin; pin++) {
+          if (!VALID_PIN(pin)) continue;
           if (pin_is_protected(pin) && !ignore_protection) continue;
           const byte val =
             /*
               IS_ANALOG(pin)
-                ? analogRead(pin - analogInputToDigitalPin(0)) : // int16_t val
+                ? analogRead(DIGITAL_PIN_TO_ANALOG_PIN(pin)) : // int16_t val
                 :
             //*/
               digitalRead(pin);
@@ -6775,7 +6784,7 @@ inline void gcode_M42() {
 
     // Report current state of selected pin(s)
     for (uint8_t pin = first_pin; pin <= last_pin; pin++)
-      report_pin_state_extended(pin, ignore_protection, true);
+      if (VALID_PIN(pin)) report_pin_state_extended(pin, ignore_protection, true);
   }
 
 #endif // PINS_DEBUGGING
@@ -10766,6 +10775,7 @@ void process_next_command() {
         gcode_M140();
         break;
 
+
       case 105: // M105: Report current temperature
         gcode_M105();
         KEEPALIVE_STATE(NOT_BUSY);
@@ -12927,7 +12937,7 @@ void kill(const char* lcd_msg) {
   _delay_ms(250); //Wait to ensure all interrupts routines stopped
   thermalManager.disable_all_heaters(); //turn off heaters again
 
-  #if defined(ACTION_ON_KILL)
+  #ifdef ACTION_ON_KILL
     SERIAL_ECHOLNPGM("//action:" ACTION_ON_KILL);
   #endif
 

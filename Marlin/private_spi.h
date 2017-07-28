@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef __SPI_H__
-#define __SPI_H__
+#ifndef __PRIVATE_SPI_H__
+#define __PRIVATE_SPI_H__
 
 #include <stdint.h>
 #include "softspi.h"
@@ -54,4 +54,4 @@ class SPI<MISO_PIN, MOSI_PIN, SCK_PIN> {
 
 };
 
-#endif // __SPI_H__
+#endif // __PRIVATE_SPI_H__

@@ -1,4 +1,30 @@
-# Marlin 3D Printer Firmware
+============================================================================
+
+__Configured for MY Tevo Tarantula. It works for me, it may not work for you!__
+
+See example_configurations/Tevo Tarantula for other Tarantula configurations:
+
+- Tarantula-01
+  - Small bed, BLTouch, NO SD support, EEPROM enabled
+- Tarantula-02
+  - Small bed, BLTouch, SD support, EEPROM enabled
+- Tarantula-03
+  - Small bed, NO bed autolevel, SD support, EEPROM enabled
+- Tarantula-04
+  - Large bed, NO bed autolevel, SD support, EEPROM enabled
+- Tarantula-05
+  - Large bed, BLTouch, SD support, EEPROM enabled, Thermistor for Genuine E3Dv6, Software PWM Layer Fan
+  
+Do you have a configuration for the Tarantula that is not covered above? Would
+you like to share it with others by having it added to the above examples?
+If so, please contact me at jb.github (at) rcairgallery (dot) com and we'll work something
+out. (Note: Please do not contact me for support questions. I'm afraid I just do not have
+the time for answering such inquiries. Best bet is to ask in the Tevo Tarantuala
+Facebook group at https://www.facebook.com/groups/TEVO.3dprinter.owners/.)
+
+Thanks!
+
+============================================================================# Marlin 3D Printer Firmware
 <img align="right" src="../../raw/1.1.x/buildroot/share/pixmaps/logo/marlin-250.png" />
 
 ## Marlin 2.0
